@@ -27,7 +27,7 @@ decode encs text  =  map (\enc -> Enc.decodeLazyByteStringExplicit enc text)
                   $  encs
   where
     modError text =
-      left $ \e -> "Failed to decode" ++ show text ++ ": " ++ show e
+      left $ \e -> "Failed to decode " ++ show text ++ ": " ++ show e
 
     Left _      `fallback` e = e
     e@(Right _) `fallback` _ = e
