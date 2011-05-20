@@ -24,6 +24,6 @@ conv encsIn encOut  =  BS8.lines
 decode :: Enc.Encoding e => [e] -> BS.ByteString -> Either String String
 decode encs text  =  map (\enc -> Enc.decodeLazyByteStringExplicit enc text)
                  >>> foldl1 (<!>)  -- Pick the first successful one
-                 >>> left (\err -> "Failed to decode" ++ show text
+                 >>> left (\err -> "Failed to decode " ++ show text
                                 ++ ": " ++ show err)
                   $  encs
