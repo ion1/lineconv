@@ -10,16 +10,16 @@ import qualified Data.ByteString.Lazy.Char8 as BS8
 import qualified Data.Encoding as Enc
 import Data.Functor.Alt
 
-main = BS8.interact $ conv encsIn encOut
+main = BS8.interact $ convert encsIn encOut
   where
     encsIn = Enc.encodingFromString <$> ["UTF-8", "CP1252"]
     encOut = Enc.encodingFromString "UTF-8"
 
-conv :: Enc.Encoding e => [e] -> e -> BS.ByteString -> BS.ByteString
-conv encsIn encOut  =  BS8.lines
-                   >>> map (either error id . decode encsIn)
-                   >>> map (Enc.encodeLazyByteString encOut)
-                   >>> BS8.unlines
+convert :: Enc.Encoding e => [e] -> e -> BS.ByteString -> BS.ByteString
+convert encsIn encOut  =  BS8.lines
+                      >>> map (either error id . decode encsIn)
+                      >>> map (Enc.encodeLazyByteString encOut)
+                      >>> BS8.unlines
 
 decode :: Enc.Encoding e => [e] -> BS.ByteString -> Either String String
 decode encs text = tryEncs text encs
