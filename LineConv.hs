@@ -8,6 +8,7 @@ import Control.Arrow
 import qualified Data.ByteString.Lazy as BS
 import qualified Data.ByteString.Lazy.Char8 as BS8
 import qualified Data.Encoding as Enc
+import Data.Functor.Alt
 
 main = BS8.interact $ conv encsIn encOut
   where
@@ -22,12 +23,9 @@ conv encsIn encOut  =  BS8.lines
 
 decode :: Enc.Encoding e => [e] -> BS.ByteString -> Either String String
 decode encs text  =  map (\enc -> Enc.decodeLazyByteStringExplicit enc text)
-                 >>> foldl1 fallback
+                 >>> foldl1 (<!>)
                  >>> modError text
                   $  encs
   where
     modError text =
       left $ \e -> "Failed to decode " ++ show text ++ ": " ++ show e
-
-    Left _      `fallback` e = e
-    e@(Right _) `fallback` _ = e
