@@ -10,6 +10,7 @@ import qualified Data.ByteString.Lazy.Char8 as BS8
 import qualified Data.Encoding as Enc
 import Data.Functor.Alt
 
+main :: IO ()
 main = BS8.interact $ convert encsIn encOut
   where
     encsIn = Enc.encodingFromString <$> ["UTF-8", "CP1252"]
