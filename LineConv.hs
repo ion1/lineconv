@@ -3,29 +3,31 @@
 
 module Main (main) where
 
-import Control.Applicative
+import qualified Codec.Text.IConv as IC
 import Control.Arrow
 import qualified Data.ByteString.Lazy as BS
 import qualified Data.ByteString.Lazy.Char8 as BS8
-import qualified Data.Encoding as Enc
 import Data.Functor.Alt
 
 main :: IO ()
-main = BS8.interact $ convert encsIn encOut
+main = BS8.interact (convert encsIn encOut)
   where
-    encsIn = Enc.encodingFromString <$> ["UTF-8", "CP1252"]
-    encOut = Enc.encodingFromString "UTF-8"
+    encsIn = ["UTF-8", "CP1252"]
+    encOut = "UTF-8"
 
-convert :: Enc.Encoding e => [e] -> e -> BS.ByteString -> BS.ByteString
+convert :: [IC.EncodingName] -> IC.EncodingName -> BS.ByteString
+        -> BS.ByteString
 convert encsIn encOut  =  BS8.lines
-                      >>> map (either error id . decode encsIn)
-                      >>> map (Enc.encodeLazyByteString encOut)
+                      >>> map (either error id . convertLine encsIn encOut)
                       >>> BS8.unlines
 
-decode :: Enc.Encoding e => [e] -> BS.ByteString -> Either String String
-decode encs text = tryEncs text encs
+convertLine :: [IC.EncodingName] -> IC.EncodingName -> BS.ByteString
+            -> Either String BS.ByteString
+convertLine encsIn encOut text = tryEncs encsIn
   where
-    tryEncs text  =  map (`Enc.decodeLazyByteStringExplicit` text)
-                 >>> foldl1 (<!>)  -- Pick the first successful one
-                 >>> left (\err -> "Failed to decode " ++ show text
-                                ++ ": " ++ show err)
+    tryEncs  =  map (\enc -> swapE (IC.convertStrictly enc encOut text))
+            >>> foldl1 (<!>)  -- Pick the first successful one
+            >>> left (\err -> "Failed to decode " ++ show text
+                           ++ ": " ++ show (IC.reportConversionError err))
+
+    swapE = either Right Left
