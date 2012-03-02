@@ -1,7 +1,7 @@
 -- Linewise charset conversion for content that has some lines in
 -- CP1252/ISO-8859-1 and some lines in UTF-8
 
-module LineConv where
+module Main (main) where
 
 import Control.Applicative
 import Control.Arrow
