@@ -1,0 +1,20 @@
+name:                lineconv
+version:             0.1
+synopsis:            Linewise charset conversion for content that has some
+                     lines in CP1252/ISO-8859-1 and some lines in UTF-8
+homepage:            https://github.com/ion1/lineconv
+license:             ISC
+license-file:        COPYING
+author:              Johan Kiviniemi
+maintainer:          devel@johan.kiviniemi.name
+category:            Text
+build-type:          Simple
+cabal-version:       >=1.8
+
+executable lineconv
+  main-is:             LineConv.hs
+  build-depends:       base == 4.*,
+                       bytestring == 0.9.*,
+                       iconv == 0.4.*,
+                       semigroupoids == 1.2.*
+  ghc-options:         -Werror -Wall
