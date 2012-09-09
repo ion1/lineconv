@@ -16,5 +16,5 @@ executable lineconv
   build-depends:       base == 4.*,
                        bytestring == 0.9.*,
                        iconv == 0.4.*,
-                       semigroupoids == 1.2.*
+                       semigroupoids == 3.0.*
   ghc-options:         -Werror -Wall
