@@ -3,11 +3,11 @@
 
 module Main (main) where
 
-import qualified Codec.Text.IConv as IC
-import Control.Arrow
-import qualified Data.ByteString.Lazy as BS
+import qualified Codec.Text.IConv           as IC
+import           Control.Arrow
+import qualified Data.ByteString.Lazy       as BS
 import qualified Data.ByteString.Lazy.Char8 as BS8
-import Data.Functor.Alt
+import           Data.Functor.Alt
 
 main :: IO ()
 main = BS8.interact (convert encsIn encOut)
